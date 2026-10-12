@@ -1,0 +1,485 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استخراج متن از عکس | OCR</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Tahoma, Arial, sans-serif;
+  background: #101827;
+  color: #f1f5f9;
+}
+
+.container {
+  max-width: 700px;
+  margin: 25px auto;
+  padding: 22px;
+  background: #1b2638;
+  border-radius: 18px;
+  box-shadow: 0 10px 35px #0004;
+}
+
+h1 {
+  text-align: center;
+  font-size: 23px;
+  color: #67e8f9;
+}
+
+.description {
+  text-align: center;
+  line-height: 1.9;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.upload {
+  display: block;
+  text-align: center;
+  padding: 30px 12px;
+  margin: 20px 0;
+  border: 2px dashed #38bdf8;
+  border-radius: 14px;
+  cursor: pointer;
+  background: #172235;
+  line-height: 2;
+}
+
+.upload.drag {
+  background: #263e56;
+  border-color: #a5f3fc;
+}
+
+.upload input {
+  display: none;
+}
+
+#preview {
+  display: none;
+  width: 100%;
+  max-height: 350px;
+  object-fit: contain;
+  background: #0b1220;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 13px 16px;
+  font-size: 15px;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.primary {
+  width: 100%;
+  background: #06b6d4;
+  color: #082f49;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.actions button {
+  flex: 1;
+}
+
+.copy {
+  background: #4ade80;
+  color: #052e16;
+}
+
+.clear {
+  background: #475569;
+  color: white;
+}
+
+.about-button {
+  width: 100%;
+  margin-top: 12px;
+  background: #334155;
+  color: white;
+}
+
+label.text-label {
+  display: block;
+  margin: 20px 0 9px;
+  font-weight: bold;
+}
+
+textarea {
+  width: 100%;
+  min-height: 250px;
+  padding: 14px;
+  border: 1px solid #475569;
+  border-radius: 12px;
+  background: #0f172a;
+  color: white;
+  font: 15px/1.9 Tahoma, Arial, sans-serif;
+  resize: vertical;
+  direction: auto;
+  text-align: start;
+}
+
+#status {
+  margin-top: 14px;
+  padding: 12px;
+  background: #0f172a;
+  border-radius: 9px;
+  color: #bae6fd;
+  font-size: 13px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+progress {
+  width: 100%;
+  height: 10px;
+  margin-top: 10px;
+  accent-color: #22d3ee;
+}
+
+#aboutPanel {
+  margin-top: 15px;
+  padding: 22px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  text-align: center;
+  line-height: 2;
+}
+
+#aboutPanel h2 {
+  font-size: 20px;
+  color: #67e8f9;
+}
+
+.about-detail {
+  direction: ltr;
+  text-align: center;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+}
+
+.email-link {
+  color: #67e8f9;
+  text-decoration: none;
+}
+
+.email-link:hover {
+  text-decoration: underline;
+}
+
+footer {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <h1>📷 استخراج متن از عکس</h1>
+
+  <p class="description">
+    عکس را انتخاب کن، متن فارسی و انگلیسی را استخراج کن
+    و نتیجه را به‌راحتی کپی کن.
+  </p>
+
+  <label class="upload" id="dropArea">
+    <div style="font-size:36px">📁</div>
+    <strong>برای انتخاب عکس کلیک کن</strong>
+    <br>
+    یا عکس را اینجا رها کن
+    <br>
+    <small>JPG، PNG، WEBP و سایر فرمت‌های تصویری</small>
+    <input type="file" id="fileInput" accept="image/*">
+  </label>
+
+  <img id="preview" alt="پیش‌نمایش عکس">
+
+  <button class="primary" id="extractBtn" disabled>
+    استخراج متن از عکس
+  </button>
+
+  <div id="status" role="status" aria-live="polite">
+    ابتدا یک عکس انتخاب کن.
+  </div>
+
+  <progress id="progress" value="0" max="100" hidden></progress>
+
+  <label class="text-label" for="result">
+    متن استخراج‌شده:
+  </label>
+
+  <textarea id="result"
+    placeholder="متن شناسایی‌شده اینجا نمایش داده می‌شود..."
+    spellcheck="false"></textarea>
+
+  <div class="actions">
+    <button class="copy" id="copyBtn">📋 کپی متن</button>
+    <button class="clear" id="clearBtn">🗑 پاک کردن</button>
+  </div>
+
+  <button class="about-button" id="aboutBtn"
+    type="button" aria-expanded="false">
+    👤 درباره من
+  </button>
+
+  <section id="aboutPanel" hidden>
+    <h2>درباره من</h2>
+
+    <p class="about-detail">
+      <strong>Developer: Masoud delavar</strong>
+    </p>
+
+    <p class="about-detail">
+      Email:
+      <a class="email-link"
+         href="mailto:masoud0098d@gmail.com">
+        masoud0098d@gmail.com
+      </a>
+    </p>
+
+    <button class="clear" id="closeAbout" type="button">
+      بستن
+    </button>
+  </section>
+
+  <footer>
+    موتور تشخیص متن Tesseract.js · زبان فارسی و انگلیسی
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const fileInput = $('fileInput');
+const dropArea = $('dropArea');
+const preview = $('preview');
+const extractBtn = $('extractBtn');
+const result = $('result');
+const statusBox = $('status');
+const progress = $('progress');
+
+let selectedFile = null;
+let worker = null;
+let busy = false;
+let previewUrl = null;
+
+function setStatus(message) {
+  statusBox.textContent = message;
+}
+
+function selectFile(file) {
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    setStatus('لطفاً یک فایل عکس معتبر انتخاب کن.');
+    return;
+  }
+
+  if (busy) return;
+
+  selectedFile = file;
+
+  if (previewUrl) {
+    URL.revokeObjectURL(previewUrl);
+  }
+
+  previewUrl = URL.createObjectURL(file);
+  preview.src = previewUrl;
+  preview.style.display = 'block';
+
+  extractBtn.disabled = false;
+  result.value = '';
+  progress.hidden = true;
+  progress.value = 0;
+
+  setStatus('عکس آماده است. روی استخراج متن بزن.');
+}
+
+fileInput.addEventListener('change', () => {
+  selectFile(fileInput.files[0]);
+});
+
+['dragenter', 'dragover'].forEach(name => {
+  dropArea.addEventListener(name, event => {
+    event.preventDefault();
+    dropArea.classList.add('drag');
+  });
+});
+
+['dragleave', 'drop'].forEach(name => {
+  dropArea.addEventListener(name, event => {
+    event.preventDefault();
+    dropArea.classList.remove('drag');
+  });
+});
+
+dropArea.addEventListener('drop', event => {
+  selectFile(event.dataTransfer.files[0]);
+});
+
+extractBtn.addEventListener('click', async () => {
+  if (!selectedFile || busy) return;
+
+  busy = true;
+  extractBtn.disabled = true;
+  progress.hidden = false;
+  progress.value = 0;
+  result.value = '';
+
+  try {
+    if (typeof Tesseract === 'undefined') {
+      throw new Error(
+        'کتابخانه OCR بارگذاری نشده است. اتصال اینترنت را بررسی کن.'
+      );
+    }
+
+    setStatus('در حال آماده‌سازی موتور تشخیص متن...');
+
+    if (!worker) {
+      worker = await Tesseract.createWorker('fas+eng', 1, {
+        logger: message => {
+          if (message.status) {
+            const percent = Math.round(
+              (message.progress || 0) * 100
+            );
+
+            progress.value = percent;
+
+            setStatus(
+              'وضعیت: ' + message.status +
+              (message.progress != null
+                ? ' — ' + percent + '%'
+                : '')
+            );
+          }
+        }
+      });
+    }
+
+    setStatus('در حال خواندن متن فارسی و انگلیسی...');
+
+    const { data } = await worker.recognize(selectedFile);
+
+    result.value = data.text.trim();
+
+    if (result.value) {
+      setStatus('استخراج تمام شد! متن را بررسی کن و کپی بگیر.');
+      progress.value = 100;
+    } else {
+      setStatus(
+        'متنی پیدا نشد. عکس واضح‌تر یا با کیفیت بالاتر امتحان کن.'
+      );
+    }
+
+  } catch (error) {
+    console.error(error);
+
+    setStatus(
+      'خطا در استخراج متن. اینترنت را بررسی کن و دوباره امتحان کن. ' +
+      (error.message || '')
+    );
+
+  } finally {
+    busy = false;
+    extractBtn.disabled = !selectedFile;
+  }
+});
+
+$('copyBtn').addEventListener('click', async () => {
+  if (!result.value) {
+    setStatus('هنوز متنی برای کپی وجود ندارد.');
+    return;
+  }
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(result.value);
+    } else {
+      result.focus();
+      result.select();
+
+      if (!document.execCommand('copy')) {
+        throw new Error('Copy failed');
+      }
+    }
+
+    setStatus('متن با موفقیت کپی شد! ✅');
+
+  } catch (error) {
+    result.focus();
+    result.select();
+    setStatus('متن انتخاب شد؛ اگر کپی نشد، دستی کپی کن.');
+  }
+});
+
+$('clearBtn').addEventListener('click', () => {
+  if (busy) return;
+
+  selectedFile = null;
+  fileInput.value = '';
+
+  if (previewUrl) {
+    URL.revokeObjectURL(previewUrl);
+  }
+
+  previewUrl = null;
+  preview.removeAttribute('src');
+  preview.style.display = 'none';
+
+  result.value = '';
+  extractBtn.disabled = true;
+  progress.value = 0;
+  progress.hidden = true;
+
+  setStatus('پاک شد. یک عکس جدید انتخاب کن.');
+});
+
+$('aboutBtn').addEventListener('click', () => {
+  const panel = $('aboutPanel');
+
+  panel.hidden = !panel.hidden;
+
+  $('aboutBtn').setAttribute(
+    'aria-expanded',
+    String(!panel.hidden)
+  );
+});
+
+$('closeAbout').addEventListener('click', () => {
+  $('aboutPanel').hidden = true;
+  $('aboutBtn').setAttribute('aria-expanded', 'false');
+});
+</script>
+
+</body>
+</html>
+
