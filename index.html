@@ -38,7 +38,6 @@ button {
   font-weight: bold;
   cursor: pointer;
   color: var(--text);
-  transition: .15s;
 }
 
 button:disabled {
@@ -46,13 +45,14 @@ button:disabled {
   cursor: not-allowed;
 }
 
-button:focus-visible, textarea:focus-visible {
+button:focus-visible,
+textarea:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1050px;
   margin: 10px auto;
   padding: 18px;
   background: var(--panel);
@@ -100,7 +100,6 @@ h2 {
 }
 
 .upload input { display: none; }
-
 .upload-icon { font-size: 35px; }
 
 .primary {
@@ -111,12 +110,6 @@ h2 {
 .secondary {
   background: #172b45;
   border-color: #24537d;
-}
-
-.green {
-  background: #14532d;
-  border-color: #22c55e;
-  color: #dcfce7;
 }
 
 .danger {
@@ -136,24 +129,6 @@ h2 {
 
 .button-row button { flex: 1 1 125px; }
 
-#status {
-  margin-top: 13px;
-  padding: 12px;
-  border-radius: 9px;
-  background: var(--surface);
-  color: #bae6fd;
-  font-size: 12px;
-  line-height: 2;
-  overflow-wrap: anywhere;
-}
-
-progress {
-  width: 100%;
-  height: 9px;
-  margin-top: 10px;
-  accent-color: var(--cyan);
-}
-
 .file-info {
   display: flex;
   flex-wrap: wrap;
@@ -170,6 +145,30 @@ progress {
   object-fit: contain;
   background: var(--surface);
   border-radius: 7px;
+}
+
+#fileName {
+  flex: 1;
+  min-width: 100px;
+  overflow-wrap: anywhere;
+}
+
+#status {
+  margin-top: 13px;
+  padding: 12px;
+  border-radius: 9px;
+  background: var(--surface);
+  color: #bae6fd;
+  font-size: 12px;
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+
+progress {
+  width: 100%;
+  height: 9px;
+  margin-top: 10px;
+  accent-color: var(--cyan);
 }
 
 .workspace {
@@ -205,6 +204,7 @@ progress {
 }
 
 .image-scroll {
+  width: 100%;
   max-height: 68vh;
   overflow: auto;
   border: 1px solid #263c59;
@@ -218,12 +218,17 @@ progress {
   position: relative;
   width: 100%;
   line-height: 0;
+  margin: 0;
+  padding: 0;
 }
 
 #mainImage {
   display: block;
   width: 100%;
   height: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0;
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: none;
@@ -239,13 +244,14 @@ progress {
 
 .selection-rect {
   position: absolute;
-  border: 2px solid #22d3ee;
+  border: 2px solid var(--cyan);
   background: #22d3ee22;
   pointer-events: none;
+  box-sizing: border-box;
 }
 
 .selection-rect.active {
-  border-color: #4ade80;
+  border-color: var(--green);
   background: #4ade8028;
 }
 
@@ -263,6 +269,7 @@ progress {
   color: white;
   font: bold 11px Tahoma, sans-serif;
   line-height: 1.4;
+  white-space: nowrap;
 }
 
 .selection-rect.active .rect-label {
@@ -288,7 +295,7 @@ progress {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 260px;
+  max-height: 300px;
   overflow: auto;
 }
 
@@ -404,7 +411,7 @@ footer {
   <h1>📷 انتخاب و استخراج متن از عکس</h1>
 
   <p class="description">
-    روی عکس با انگشت یا ماوس محدوده متن را انتخاب کن؛
+    با انگشت یا ماوس محدوده دلخواه را روی عکس انتخاب کن؛
     فقط متن همان قسمت استخراج می‌شود.
   </p>
 
@@ -412,7 +419,7 @@ footer {
     <span class="upload-icon">📁</span><br>
     <strong>برای انتخاب عکس کلیک کن</strong><br>
     یا عکس را اینجا رها کن<br>
-    <small>JPG، PNG، WEBP و سایر فرمت‌های تصویری</small>
+    <small>JPG، PNG، WEBP و سایر فرمت‌های تصویری پشتیبانی‌شده</small>
     <input type="file" id="fileInput" accept="image/*">
   </label>
 
@@ -463,14 +470,14 @@ footer {
         </div>
 
         <div class="empty" id="imagePlaceholder">
-          ابتدا یک عکس انتخاب کن.
+          بعد از انتخاب عکس، تصویر اینجا نمایش داده می‌شود.
         </div>
       </div>
 
       <p class="image-help">
-        روش کار: انگشت یا ماوس را روی عکس بگذار و بکش تا یک مستطیل
-        دور قسمت موردنظرت ایجاد شود. با رها کردن، محدوده ثبت می‌شود.
-        برای انتخاب چند قسمت، این کار را تکرار کن.
+        روی عکس بکش تا مستطیلی دور متن موردنظرت ایجاد شود.
+        برای انتخاب چند قسمت، دوباره این کار را انجام بده.
+        برای جابه‌جایی عکس، از نوارهای پیمایش استفاده کن.
       </p>
 
       <div class="button-row">
@@ -484,7 +491,7 @@ footer {
       <h2>📝 محدوده‌های انتخاب‌شده</h2>
 
       <p class="image-help">
-        هر محدوده جداگانه پردازش می‌شود. می‌توانی هر محدوده را حذف کنی.
+        هر محدوده جداگانه پردازش می‌شود.
       </p>
 
       <div id="regionList" class="region-list">
@@ -496,12 +503,11 @@ footer {
       </label>
 
       <textarea id="result"
-        placeholder="متن محدوده‌های انتخاب‌شده اینجا نمایش داده می‌شود..."
+        placeholder="متن استخراج‌شده اینجا نمایش داده می‌شود..."
         spellcheck="false"></textarea>
 
       <p class="editor-note">
-        متن را می‌توانی ویرایش کنی. دکمه کپی، دقیقاً محتوای همین کادر را
-        کپی می‌کند.
+        متن را می‌توانی ویرایش کنی. دکمه کپی، محتوای همین کادر را کپی می‌کند.
       </p>
 
       <div class="button-row">
@@ -526,15 +532,15 @@ footer {
     <p class="about-detail"><strong>Developer: Masoud delavar</strong></p>
     <p class="about-detail">
       Email:
-      <a class="email-link" href="mailto:masoud0098d@gmail.com">
-        masoud0098d@gmail.com
+      <a class="email-link" href="mailto:masoud0098@gmail.com">
+        masoud0098@gmail.com
       </a>
     </p>
     <button class="secondary" id="closeAbout" type="button">بستن</button>
   </section>
 
   <footer>
-    موتور تشخیص متن Tesseract.js · زبان فارسی و انگلیسی<br>
+    موتور تشخیص متن Tesseract.js · فارسی و انگلیسی<br>
     طراحی و توسعه: Masoud delavar
   </footer>
 
@@ -552,7 +558,6 @@ const dropArea = $('dropArea');
 const imageStage = $('imageStage');
 const mainImage = $('mainImage');
 const selectionLayer = $('selectionLayer');
-const imageScroll = $('imageScroll');
 const imagePlaceholder = $('imagePlaceholder');
 const result = $('result');
 const progress = $('progress');
@@ -567,6 +572,9 @@ let regions = [];
 let nextRegionId = 1;
 let activeRegionId = null;
 let drawing = null;
+let loadToken = 0;
+
+/* وضعیت رابط */
 
 function setStatus(message) {
   $('status').textContent = message;
@@ -582,14 +590,16 @@ function updateButtons() {
     busy || activeRegionId === null;
 
   $('removeImageBtn').disabled = busy;
-  $('clearImageBtn')?.setAttribute('disabled', busy ? '' : null);
   fileInput.disabled = busy;
+  dropArea.style.pointerEvents = busy ? 'none' : '';
 }
 
 function setBusy(value) {
   busy = value;
   updateButtons();
 }
+
+/* پاک‌سازی محدوده‌ها */
 
 function resetRegions() {
   regions = [];
@@ -602,52 +612,103 @@ function resetRegions() {
   updateButtons();
 }
 
+/* بارگذاری مطمئن عکس */
+
 function selectFile(file) {
   if (!file || busy) return;
 
-  if (!file.type.startsWith('image/')) {
-    setStatus('لطفاً یک فایل عکس معتبر انتخاب کن.');
+  if (file.type && !file.type.startsWith('image/')) {
+    setStatus('فایل انتخاب‌شده عکس نیست. لطفاً یک تصویر انتخاب کن.');
     return;
   }
 
-  if (previewUrl) URL.revokeObjectURL(previewUrl);
+  const token = ++loadToken;
 
-  selectedFile = file;
-  previewUrl = URL.createObjectURL(file);
-  imageReady = false;
-  zoom = 1;
+  // ساخت آدرس موقت جدید، بدون حذف آدرس عکس قبلی تا پایان بارگذاری
+  const newUrl = URL.createObjectURL(file);
+  const testImage = new Image();
 
-  mainImage.onload = () => {
-    imageReady = true;
-    imageStage.hidden = false;
-    imagePlaceholder.hidden = true;
+  setStatus('در حال بارگذاری عکس...');
 
-    $('previewSmall').src = previewUrl;
-    $('fileName').textContent = file.name;
-    $('fileInfo').hidden = false;
+  testImage.onload = () => {
+    if (token !== loadToken) {
+      URL.revokeObjectURL(newUrl);
+      return;
+    }
 
-    resetRegions();
-    applyZoom();
-    updateButtons();
+    if (!testImage.naturalWidth || !testImage.naturalHeight) {
+      URL.revokeObjectURL(newUrl);
+      setStatus('ابعاد عکس قابل خواندن نیست.');
+      return;
+    }
 
-    setStatus('عکس آماده است. با کشیدن انگشت یا ماوس، محدوده متن را انتخاب کن.');
-  };
-
-  mainImage.onerror = () => {
+    // فقط پس از اطمینان از بازشدن عکس، آدرس قبلی آزاد می‌شود
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = newUrl;
+    selectedFile = file;
     imageReady = false;
-    selectedFile = null;
-    setStatus('باز کردن عکس ناموفق بود. یک عکس دیگر انتخاب کن.');
-    updateButtons();
+    zoom = 1;
+
+    mainImage.onload = () => {
+      if (token !== loadToken) return;
+
+      if (!mainImage.naturalWidth || !mainImage.naturalHeight) {
+        setStatus('مرورگر نتوانست ابعاد عکس را بخواند.');
+        return;
+      }
+
+      imageReady = true;
+      imageStage.hidden = false;
+      imagePlaceholder.hidden = true;
+
+      $('previewSmall').src = previewUrl;
+      $('fileName').textContent = file.name || 'تصویر انتخاب‌شده';
+      $('fileInfo').hidden = false;
+
+      resetRegions();
+      applyZoom();
+      updateButtons();
+
+      setStatus(
+        'عکس با موفقیت بارگذاری شد. حالا محدوده متن را با انگشت یا ماوس انتخاب کن.'
+      );
+    };
+
+    mainImage.onerror = () => {
+      if (token !== loadToken) return;
+
+      imageReady = false;
+      setStatus('نمایش عکس ناموفق بود. فرمت JPG یا PNG را امتحان کن.');
+      updateButtons();
+    };
+
+    // ابتدا src تنظیم می‌شود؛ سپس مرورگر تصویر را نمایش می‌دهد
+    mainImage.src = previewUrl;
   };
 
-  mainImage.src = previewUrl;
-  fileInput.value = '';
-  updateButtons();
+  testImage.onerror = () => {
+    URL.revokeObjectURL(newUrl);
+
+    if (token !== loadToken) return;
+
+    setStatus(
+      'این عکس در مرورگر قابل بازشدن نیست. اگر فرمت آن HEIC است، ' +
+      'آن را به JPG یا PNG تبدیل کن.'
+    );
+  };
+
+  testImage.src = newUrl;
 }
 
-fileInput.addEventListener('change', () => {
-  if (fileInput.files?.[0]) selectFile(fileInput.files[0]);
+fileInput.addEventListener('change', event => {
+  const file = event.target.files && event.target.files[0];
+  if (file) selectFile(file);
+
+  // امکان انتخاب مجدد همان فایل
+  fileInput.value = '';
 });
+
+/* کشیدن و رها کردن فایل */
 
 ['dragenter', 'dragover'].forEach(type => {
   dropArea.addEventListener(type, event => {
@@ -664,27 +725,32 @@ fileInput.addEventListener('change', () => {
 });
 
 dropArea.addEventListener('drop', event => {
-  if (!busy && event.dataTransfer.files[0]) {
-    selectFile(event.dataTransfer.files[0]);
-  }
+  if (busy) return;
+
+  const file = event.dataTransfer &&
+    event.dataTransfer.files &&
+    event.dataTransfer.files[0];
+
+  if (file) selectFile(file);
 });
 
-/* نمایش عکس و بزرگ‌نمایی */
+/* بزرگ‌نمایی */
 
 function applyZoom() {
   if (!imageReady) return;
-
-  const width = mainImage.naturalWidth * zoom;
 
   if (zoom <= 1) {
     imageStage.style.width = '100%';
     imageStage.style.maxWidth = '100%';
   } else {
-    imageStage.style.width = width + 'px';
+    imageStage.style.width =
+      Math.round(mainImage.naturalWidth * zoom) + 'px';
+
     imageStage.style.maxWidth = 'none';
   }
 
   $('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+
   requestAnimationFrame(renderRegions);
 }
 
@@ -703,7 +769,7 @@ $('zoomReset').addEventListener('click', () => {
   applyZoom();
 });
 
-/* تبدیل مختصات نمایش عکس به مختصات واقعی تصویر */
+/* تبدیل مختصات */
 
 function pointerPosition(event) {
   const rect = selectionLayer.getBoundingClientRect();
@@ -717,17 +783,20 @@ function pointerPosition(event) {
 function displayToImage(point) {
   const rect = selectionLayer.getBoundingClientRect();
 
+  if (!rect.width || !rect.height) {
+    return { x: 0, y: 0 };
+  }
+
   return {
     x: point.x / rect.width * mainImage.naturalWidth,
     y: point.y / rect.height * mainImage.naturalHeight
   };
 }
 
-/* انتخاب مستطیلی با لمس یا ماوس */
+/* انتخاب محدوده با انگشت یا ماوس */
 
 selectionLayer.addEventListener('pointerdown', event => {
-  if (!imageReady || busy) return;
-
+  if (!imageReady || busy || drawing) return;
   if (event.pointerType === 'mouse' && event.button !== 0) return;
 
   event.preventDefault();
@@ -744,7 +813,10 @@ selectionLayer.addEventListener('pointerdown', event => {
   drawing.element.className = 'selection-rect drawing';
   selectionLayer.appendChild(drawing.element);
 
-  selectionLayer.setPointerCapture(event.pointerId);
+  try {
+    selectionLayer.setPointerCapture(event.pointerId);
+  } catch (_) {}
+
   updateDrawingRect();
 });
 
@@ -762,11 +834,10 @@ selectionLayer.addEventListener('pointerup', event => {
   event.preventDefault();
 
   const currentDrawing = drawing;
-  drawing = null;
-
   const start = currentDrawing.start;
   const end = pointerPosition(event);
 
+  drawing = null;
   currentDrawing.element.remove();
 
   const left = Math.min(start.x, end.x);
@@ -774,8 +845,8 @@ selectionLayer.addEventListener('pointerup', event => {
   const width = Math.abs(end.x - start.x);
   const height = Math.abs(end.y - start.y);
 
-  if (width < 8 || height < 8) {
-    setStatus('محدوده خیلی کوچک است. دوباره روی متن بکش.');
+  if (width < 6 || height < 6) {
+    setStatus('محدوده خیلی کوچک است. دوباره دور متن بکش.');
     return;
   }
 
@@ -785,12 +856,30 @@ selectionLayer.addEventListener('pointerup', event => {
     y: top + height
   });
 
+  const x = Math.max(0, Math.min(p1.x, p2.x));
+  const y = Math.max(0, Math.min(p1.y, p2.y));
+
+  const regionWidth = Math.min(
+    mainImage.naturalWidth - x,
+    Math.abs(p2.x - p1.x)
+  );
+
+  const regionHeight = Math.min(
+    mainImage.naturalHeight - y,
+    Math.abs(p2.y - p1.y)
+  );
+
+  if (regionWidth < 2 || regionHeight < 2) {
+    setStatus('محدوده انتخابی معتبر نیست.');
+    return;
+  }
+
   const region = {
     id: nextRegionId++,
-    x: Math.round(Math.min(p1.x, p2.x)),
-    y: Math.round(Math.min(p1.y, p2.y)),
-    width: Math.round(Math.abs(p2.x - p1.x)),
-    height: Math.round(Math.abs(p2.y - p1.y)),
+    x: Math.round(x),
+    y: Math.round(y),
+    width: Math.max(1, Math.round(regionWidth)),
+    height: Math.max(1, Math.round(regionHeight)),
     text: '',
     confidence: null,
     processed: false
@@ -804,8 +893,8 @@ selectionLayer.addEventListener('pointerup', event => {
   updateButtons();
 
   setStatus(
-    'محدوده ' + region.id + ' انتخاب شد. ' +
-    'می‌توانی محدوده‌های بیشتری انتخاب کنی یا استخراج متن را بزنی.'
+    'محدوده ' + region.id + ' ثبت شد. ' +
+    'می‌توانی قسمت‌های بیشتری انتخاب کنی یا استخراج متن را بزنی.'
   );
 });
 
@@ -830,38 +919,38 @@ function updateDrawingRect() {
     width: width + 'px',
     height: height + 'px'
   });
-});
+}
 
-/* رسم فقط مستطیل‌های انتخاب‌شده، نه کادر تک‌تک متن‌ها */
+/* نمایش فقط محدوده‌های انتخاب‌شده */
 
 function renderRegions() {
-  selectionLayer.querySelectorAll('.selection-rect:not(.drawing)')
+  selectionLayer
+    .querySelectorAll('.selection-rect:not(.drawing)')
     .forEach(element => element.remove());
 
   if (!imageReady) return;
 
-  const width = mainImage.naturalWidth;
-  const height = mainImage.naturalHeight;
+  const imageWidth = mainImage.naturalWidth;
+  const imageHeight = mainImage.naturalHeight;
 
   regions.forEach(region => {
     const rect = document.createElement('div');
-
     rect.className = 'selection-rect';
 
     if (region.id === activeRegionId) {
       rect.classList.add('active');
     }
 
-    rect.style.left = (region.x / width * 100) + '%';
-    rect.style.top = (region.y / height * 100) + '%';
-    rect.style.width = (region.width / width * 100) + '%';
-    rect.style.height = (region.height / height * 100) + '%';
+    rect.style.left = (region.x / imageWidth * 100) + '%';
+    rect.style.top = (region.y / imageHeight * 100) + '%';
+    rect.style.width = (region.width / imageWidth * 100) + '%';
+    rect.style.height = (region.height / imageHeight * 100) + '%';
 
     const label = document.createElement('span');
     label.className = 'rect-label';
     label.textContent = 'محدوده ' + region.id;
-    rect.appendChild(label);
 
+    rect.appendChild(label);
     selectionLayer.appendChild(rect);
   });
 }
@@ -885,7 +974,9 @@ function renderRegionList() {
     const item = document.createElement('div');
     item.className = 'region-item';
 
-    if (region.id === activeRegionId) item.classList.add('active');
+    if (region.id === activeRegionId) {
+      item.classList.add('active');
+    }
 
     const main = document.createElement('div');
     main.className = 'region-main';
@@ -900,7 +991,8 @@ function renderRegionList() {
 
     const text = document.createElement('div');
     text.className = 'region-text';
-    text.textContent = region.text || 'هنوز متنی استخراج نشده است.';
+    text.textContent = region.text ||
+      'هنوز متنی استخراج نشده است.';
 
     main.append(title, text);
 
@@ -912,6 +1004,7 @@ function renderRegionList() {
     };
 
     main.addEventListener('click', activate);
+
     main.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
@@ -938,7 +1031,7 @@ function renderRegionList() {
 
       renderRegions();
       renderRegionList();
-      rebuildText();
+      rebuildText(false);
 
       setStatus('محدوده حذف شد.');
     });
@@ -950,7 +1043,7 @@ function renderRegionList() {
   updateButtons();
 }
 
-/* حذف محدوده */
+/* حذف محدوده‌ها */
 
 $('undoBtn').addEventListener('click', () => {
   if (busy || !regions.length) return;
@@ -963,9 +1056,9 @@ $('undoBtn').addEventListener('click', () => {
 
   renderRegions();
   renderRegionList();
-  rebuildText();
+  rebuildText(false);
 
-  setStatus('آخرین محدوده (' + removed.id + ') حذف شد.');
+  setStatus('محدوده ' + removed.id + ' حذف شد.');
 });
 
 $('clearCurrentBtn').addEventListener('click', () => {
@@ -979,7 +1072,7 @@ $('clearCurrentBtn').addEventListener('click', () => {
 
   renderRegions();
   renderRegionList();
-  rebuildText();
+  rebuildText(false);
 
   setStatus('محدوده فعال حذف شد.');
 });
@@ -991,7 +1084,59 @@ $('clearRegionsBtn').addEventListener('click', () => {
   setStatus('تمام محدوده‌ها پاک شدند.');
 });
 
-/* راه‌اندازی OCR */
+/* ساخت برش تصویر برای OCR */
+
+function cropRegion(region) {
+  const canvas = document.createElement('canvas');
+
+  const x = Math.max(
+    0,
+    Math.min(mainImage.naturalWidth - 1, region.x)
+  );
+
+  const y = Math.max(
+    0,
+    Math.min(mainImage.naturalHeight - 1, region.y)
+  );
+
+  const width = Math.max(
+    1,
+    Math.min(region.width, mainImage.naturalWidth - x)
+  );
+
+  const height = Math.max(
+    1,
+    Math.min(region.height, mainImage.naturalHeight - y)
+  );
+
+  // بزرگ‌نمایی برش‌های کوچک، برای بهبود احتمالی تشخیص
+  const scale = Math.min(
+    3,
+    Math.max(1, 1000 / Math.max(width, height))
+  );
+
+  canvas.width = Math.round(width * scale);
+  canvas.height = Math.round(height * scale);
+
+  const context = canvas.getContext('2d');
+
+  if (!context) {
+    throw new Error('ساخت برش عکس ناموفق بود.');
+  }
+
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = 'high';
+
+  context.drawImage(
+    mainImage,
+    x, y, width, height,
+    0, 0, canvas.width, canvas.height
+  );
+
+  return canvas;
+}
+
+/* راه‌اندازی موتور OCR */
 
 async function getWorker() {
   if (worker) return worker;
@@ -1006,15 +1151,15 @@ async function getWorker() {
 
   worker = await Tesseract.createWorker('fas+eng', 1, {
     logger: message => {
-      if (message.status) {
-        const percent = Math.round((message.progress || 0) * 100);
+      if (!message.status) return;
 
-        if (message.status === 'recognizing text') {
-          progress.value = percent;
-          setStatus('در حال تشخیص متن محدوده... ' + percent + '%');
-        } else {
-          setStatus('آماده‌سازی موتور: ' + message.status);
-        }
+      const percent = Math.round((message.progress || 0) * 100);
+
+      if (message.status === 'recognizing text') {
+        progress.value = percent;
+        setStatus('در حال تشخیص متن محدوده... ' + percent + '%');
+      } else {
+        setStatus('آماده‌سازی موتور: ' + message.status);
       }
     }
   });
@@ -1022,43 +1167,7 @@ async function getWorker() {
   return worker;
 }
 
-/* برش واقعی عکس در مختصات انتخاب‌شده */
-
-function cropRegion(region) {
-  const canvas = document.createElement('canvas');
-
-  const x = Math.max(0, Math.min(mainImage.naturalWidth - 1, region.x));
-  const y = Math.max(0, Math.min(mainImage.naturalHeight - 1, region.y));
-
-  const width = Math.max(
-    1,
-    Math.min(region.width, mainImage.naturalWidth - x)
-  );
-
-  const height = Math.max(
-    1,
-    Math.min(region.height, mainImage.naturalHeight - y)
-  );
-
-  canvas.width = width;
-  canvas.height = height;
-
-  const context = canvas.getContext('2d');
-
-  if (!context) {
-    throw new Error('ساخت تصویر برش‌خورده ناموفق بود.');
-  }
-
-  context.drawImage(
-    mainImage,
-    x, y, width, height,
-    0, 0, width, height
-  );
-
-  return canvas;
-}
-
-/* استخراج متن فقط از محدوده‌ها */
+/* استخراج فقط متن داخل محدوده‌ها */
 
 $('extractBtn').addEventListener('click', async () => {
   if (busy || !imageReady || !regions.length) return;
@@ -1067,7 +1176,13 @@ $('extractBtn').addEventListener('click', async () => {
   progress.hidden = false;
   progress.value = 0;
 
-  const queue = [...regions];
+  const queue = regions.filter(region => !region.processed);
+
+  if (!queue.length) {
+    setBusy(false);
+    setStatus('تمام محدوده‌ها قبلاً پردازش شده‌اند.');
+    return;
+  }
 
   try {
     const ocrWorker = await getWorker();
@@ -1084,13 +1199,15 @@ $('extractBtn').addEventListener('click', async () => {
       renderRegions();
       renderRegionList();
 
-      const canvas = cropRegion(region);
-      const response = await ocrWorker.recognize(canvas);
+      const croppedCanvas = cropRegion(region);
+      const response = await ocrWorker.recognize(croppedCanvas);
 
       region.text = (response.data.text || '').trim();
+
       region.confidence = Number.isFinite(response.data.confidence)
         ? Math.round(response.data.confidence)
         : null;
+
       region.processed = true;
 
       progress.value = Math.round(
@@ -1098,20 +1215,20 @@ $('extractBtn').addEventListener('click', async () => {
       );
 
       renderRegionList();
-      rebuildText();
+      rebuildText(false);
     }
 
     const found = regions.filter(region => region.text).length;
 
     if (found) {
       setStatus(
-        'پردازش تمام شد. از ' + regions.length +
-        ' محدوده، در ' + found +
-        ' محدوده متن پیدا شد. متن نهایی را بررسی کن.'
+        'پردازش تمام شد. در ' + found +
+        ' محدوده متن پیدا شد. متن را بررسی و در صورت نیاز ویرایش کن.'
       );
     } else {
       setStatus(
-        'متنی پیدا نشد. محدوده را دقیق‌تر انتخاب کن یا عکس واضح‌تری امتحان کن.'
+        'متنی پیدا نشد. محدوده را کمی بزرگ‌تر انتخاب کن ' +
+        'و کیفیت عکس را بررسی کن.'
       );
     }
 
@@ -1120,7 +1237,7 @@ $('extractBtn').addEventListener('click', async () => {
 
     setStatus(
       'خطا در استخراج متن: ' +
-      (error.message || 'اتصال اینترنت را بررسی کن.')
+      (error.message || 'اتصال اینترنت یا بارگذاری موتور OCR را بررسی کن.')
     );
 
   } finally {
@@ -1129,20 +1246,24 @@ $('extractBtn').addEventListener('click', async () => {
   }
 });
 
-/* متن نهایی و قابل ویرایش */
+/* متن نهایی */
 
-function rebuildText() {
+function rebuildText(showMessage = true) {
   result.value = regions
     .filter(region => region.text)
     .map(region => region.text)
     .join('\n');
 
-  setStatus('متن کادر از روی نتایج محدوده‌ها بازسازی شد.');
+  if (showMessage) {
+    setStatus('متن کادر از روی نتایج محدوده‌ها بازسازی شد.');
+  }
 }
 
-$('rebuildBtn').addEventListener('click', rebuildText);
+$('rebuildBtn').addEventListener('click', () => {
+  rebuildText(true);
+});
 
-/* کپی فقط محتوای کادر */
+/* کپی متن قابل ویرایش */
 
 $('copyBtn').addEventListener('click', async () => {
   if (!result.value.trim()) {
@@ -1177,18 +1298,21 @@ $('copyBtn').addEventListener('click', async () => {
 function clearImage() {
   if (busy) return;
 
+  // بی‌اعتبار کردن بارگذاری احتمالی قبلی
+  loadToken++;
+
   selectedFile = null;
   imageReady = false;
   fileInput.value = '';
+
+  mainImage.onload = null;
+  mainImage.onerror = null;
+  mainImage.removeAttribute('src');
 
   if (previewUrl) {
     URL.revokeObjectURL(previewUrl);
     previewUrl = null;
   }
-
-  mainImage.onload = null;
-  mainImage.onerror = null;
-  mainImage.removeAttribute('src');
 
   imageStage.hidden = true;
   imageStage.style.width = '100%';
@@ -1233,6 +1357,8 @@ $('closeAbout').addEventListener('click', () => {
 /* شروع برنامه */
 
 mainImage.draggable = false;
+imageStage.hidden = true;
+imagePlaceholder.hidden = false;
 updateButtons();
 </script>
 
