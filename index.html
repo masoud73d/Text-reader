@@ -1,55 +1,97 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
 <title>استخراج متن از عکس | OCR</title>
 
 <style>
+:root {
+  --bg: #101827;
+  --panel: #1b2638;
+  --surface: #0f172a;
+  --border: #334e70;
+  --cyan: #22d3ee;
+  --blue: #0284c7;
+  --green: #4ade80;
+  --text: #f1f5f9;
+  --muted: #b7c5d8;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  padding: 20px;
+  padding: 16px;
   font-family: Tahoma, Arial, sans-serif;
-  background: #101827;
-  color: #f1f5f9;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button,
+textarea,
+input {
+  font-family: inherit;
 }
 
 .container {
-  max-width: 700px;
-  margin: 25px auto;
-  padding: 22px;
-  background: #1b2638;
+  max-width: 1100px;
+  margin: 15px auto;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid #253a55;
   border-radius: 18px;
   box-shadow: 0 10px 35px #0004;
 }
 
 h1 {
   text-align: center;
-  font-size: 23px;
-  color: #67e8f9;
+  font-size: 24px;
+  color: var(--cyan);
+  line-height: 1.7;
 }
 
 .description {
   text-align: center;
-  line-height: 1.9;
-  color: #cbd5e1;
+  line-height: 2;
+  color: var(--muted);
   font-size: 14px;
+}
+
+button {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--text);
+  transition: background .2s, border-color .2s;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+button:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
 }
 
 .upload {
   display: block;
   text-align: center;
-  padding: 30px 12px;
+  padding: 26px 12px;
   margin: 20px 0;
-  border: 2px dashed #38bdf8;
+  border: 2px dashed #0284c7;
   border-radius: 14px;
   cursor: pointer;
-  background: #172235;
+  background: #142239;
   line-height: 2;
 }
 
@@ -62,92 +104,75 @@ h1 {
   display: none;
 }
 
-#preview {
-  display: none;
-  width: 100%;
-  max-height: 350px;
-  object-fit: contain;
-  background: #0b1220;
-  border-radius: 10px;
+.upload-icon {
+  display: block;
+  font-size: 36px;
+}
+
+.file-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 15px;
+  color: var(--muted);
+  font-size: 13px;
 }
 
-button {
-  border: 0;
-  border-radius: 10px;
-  padding: 13px 16px;
-  font-size: 15px;
-  font-family: inherit;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-button:disabled {
-  opacity: .45;
-  cursor: not-allowed;
+#previewSmall {
+  display: none;
+  width: 100px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: var(--surface);
 }
 
 .primary {
-  width: 100%;
-  background: #06b6d4;
+  background: var(--cyan);
   color: #082f49;
 }
 
-.actions {
+.secondary {
+  background: #172b45;
+  border-color: #24537d;
+}
+
+.green {
+  background: #14532d;
+  border-color: #22c55e;
+  color: #dcfce7;
+}
+
+.danger {
+  background: #4c2430;
+  border-color: #85404b;
+  color: #fecdd3;
+}
+
+.full {
+  width: 100%;
+}
+
+.button-row {
   display: flex;
-  gap: 10px;
-  margin-top: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
 }
 
-.actions button {
-  flex: 1;
-}
-
-.copy {
-  background: #4ade80;
-  color: #052e16;
-}
-
-.clear {
-  background: #475569;
-  color: white;
-}
-
-.about-button {
-  width: 100%;
-  margin-top: 12px;
-  background: #334155;
-  color: white;
-}
-
-label.text-label {
-  display: block;
-  margin: 20px 0 9px;
-  font-weight: bold;
-}
-
-textarea {
-  width: 100%;
-  min-height: 250px;
-  padding: 14px;
-  border: 1px solid #475569;
-  border-radius: 12px;
-  background: #0f172a;
-  color: white;
-  font: 15px/1.9 Tahoma, Arial, sans-serif;
-  resize: vertical;
-  direction: auto;
-  text-align: start;
+.button-row button {
+  flex: 1 1 130px;
 }
 
 #status {
   margin-top: 14px;
   padding: 12px;
-  background: #0f172a;
+  background: var(--surface);
   border-radius: 9px;
   color: #bae6fd;
   font-size: 13px;
-  line-height: 1.8;
+  line-height: 1.9;
   overflow-wrap: anywhere;
 }
 
@@ -155,13 +180,280 @@ progress {
   width: 100%;
   height: 10px;
   margin-top: 10px;
-  accent-color: #22d3ee;
+  accent-color: var(--cyan);
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+  align-items: start;
+}
+
+.card {
+  min-width: 0;
+  padding: 14px;
+  background: #111e31;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+}
+
+h2 {
+  font-size: 17px;
+  color: var(--cyan);
+  margin: 0 0 14px;
+  line-height: 1.8;
+}
+
+h3 {
+  font-size: 14px;
+  margin: 0 0 12px;
+  color: #cbd5e1;
+  line-height: 1.8;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.toolbar button {
+  padding: 8px 12px;
+  min-width: 42px;
+}
+
+#zoomLabel {
+  color: #cbd5e1;
+  font-size: 12px;
+  padding: 0 6px;
+}
+
+.image-scroll {
+  width: 100%;
+  overflow: auto;
+  max-height: 75vh;
+  background: #080f1b;
+  border-radius: 9px;
+  border: 1px solid #263c59;
+}
+
+#imageStage {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  margin: 0 auto;
+}
+
+#mainImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.text-box {
+  position: absolute;
+  display: block;
+  padding: 0;
+  border: 2px solid #22d3ee;
+  border-radius: 4px;
+  background: #22d3ee20;
+  pointer-events: auto;
+  cursor: pointer;
+  min-width: 3px;
+  min-height: 3px;
+  line-height: normal;
+  color: transparent;
+}
+
+.text-box:nth-child(6n + 2) {
+  border-color: #4ade80;
+  background: #4ade8020;
+}
+
+.text-box:nth-child(6n + 3) {
+  border-color: #fbbf24;
+  background: #fbbf2420;
+}
+
+.text-box:nth-child(6n + 4) {
+  border-color: #c084fc;
+  background: #c084fc20;
+}
+
+.text-box:nth-child(6n + 5) {
+  border-color: #fb7185;
+  background: #fb718520;
+}
+
+.text-box:nth-child(6n + 6) {
+  border-color: #38bdf8;
+  background: #38bdf820;
+}
+
+.text-box.selected {
+  border: 3px solid #4ade80 !important;
+  background: #4ade8040 !important;
+  box-shadow: 0 0 0 1px #052e16;
+}
+
+.text-box:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 2px;
+}
+
+.box-number {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 3px;
+  border-radius: 3px;
+  background: #0284c7;
+  color: white;
+  font: bold 10px Tahoma, sans-serif;
+  line-height: 1;
+}
+
+.text-box.selected .box-number {
+  background: #16a34a;
+}
+
+.image-help {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 2;
+}
+
+.empty-message {
+  padding: 20px 10px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 2;
+}
+
+.line-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 440px;
+  overflow: auto;
+}
+
+.line-item {
+  display: grid;
+  grid-template-columns: 25px 30px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  padding: 11px 9px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.line-item.selected {
+  border-color: var(--green);
+  background: #123128;
+}
+
+.line-item input {
+  width: 18px;
+  height: 18px;
+  margin: 3px 0 0;
+  accent-color: var(--green);
+  cursor: pointer;
+}
+
+.line-number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 27px;
+  height: 27px;
+  border-radius: 7px;
+  background: #164e85;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.line-text {
+  font-size: 13px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.line-confidence {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.selection-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 15px 0 8px;
+  color: #bae6fd;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.text-label {
+  display: block;
+  margin: 16px 0 9px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  min-height: 190px;
+  padding: 13px;
+  border: 1px solid #475569;
+  border-radius: 10px;
+  background: var(--surface);
+  color: white;
+  font: 14px/2 Tahoma, Arial, sans-serif;
+  resize: vertical;
+  direction: auto;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+.editor-note {
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.9;
+  color: #94a3b8;
 }
 
 #aboutPanel {
   margin-top: 15px;
-  padding: 22px;
-  background: #0f172a;
+  padding: 20px;
+  background: var(--surface);
   border: 1px solid #334155;
   border-radius: 12px;
   text-align: center;
@@ -169,31 +461,70 @@ progress {
 }
 
 #aboutPanel h2 {
-  font-size: 20px;
-  color: #67e8f9;
+  color: var(--cyan);
 }
 
 .about-detail {
   direction: ltr;
-  text-align: center;
   overflow-wrap: anywhere;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .email-link {
-  color: #67e8f9;
+  color: var(--cyan);
   text-decoration: none;
-}
-
-.email-link:hover {
-  text-decoration: underline;
 }
 
 footer {
   text-align: center;
   color: #94a3b8;
   font-size: 12px;
+  line-height: 2;
   margin-top: 20px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  body {
+    padding: 8px;
+  }
+
+  .container {
+    padding: 12px;
+    margin: 5px auto;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .image-scroll {
+    max-height: 65vh;
+  }
+
+  .line-list {
+    max-height: 350px;
+  }
+
+  .card {
+    padding: 10px;
+  }
+
+  button {
+    padding: 11px 10px;
+    font-size: 12px;
+  }
+
+  .button-row button {
+    flex: 1 1 42%;
+  }
 }
 </style>
 </head>
@@ -201,15 +532,16 @@ footer {
 <body>
 <div class="container">
 
-  <h1>📷 استخراج متن از عکس</h1>
-
-  <p class="description">
-    عکس را انتخاب کن، متن فارسی و انگلیسی را استخراج کن
-    و نتیجه را به‌راحتی کپی کن.
-  </p>
+  <header>
+    <h1>📷 استخراج متن از عکس | OCR</h1>
+    <p class="description">
+      متن‌های روی تصویر را تشخیص بده، قسمت دلخواه را انتخاب کن
+      و فقط همان قسمت را کپی کن.
+    </p>
+  </header>
 
   <label class="upload" id="dropArea">
-    <div style="font-size:36px">📁</div>
+    <span class="upload-icon">📁</span>
     <strong>برای انتخاب عکس کلیک کن</strong>
     <br>
     یا عکس را اینجا رها کن
@@ -218,10 +550,16 @@ footer {
     <input type="file" id="fileInput" accept="image/*">
   </label>
 
-  <img id="preview" alt="پیش‌نمایش عکس">
+  <div class="file-info" id="fileInfo" hidden>
+    <img id="previewSmall" alt="پیش‌نمایش کوچک">
+    <span id="fileName"></span>
+    <button class="secondary" id="removeImageBtn" type="button">
+      ✕ حذف عکس
+    </button>
+  </div>
 
-  <button class="primary" id="extractBtn" disabled>
-    استخراج متن از عکس
+  <button class="primary full" id="extractBtn" disabled type="button">
+    🔍 تشخیص متن روی تصویر
   </button>
 
   <div id="status" role="status" aria-live="polite">
@@ -230,21 +568,102 @@ footer {
 
   <progress id="progress" value="0" max="100" hidden></progress>
 
-  <label class="text-label" for="result">
-    متن استخراج‌شده:
-  </label>
+  <div class="button-row">
+    <button class="secondary" id="selectAllBtn" disabled type="button">
+      ☑️ انتخاب همه
+    </button>
 
-  <textarea id="result"
-    placeholder="متن شناسایی‌شده اینجا نمایش داده می‌شود..."
-    spellcheck="false"></textarea>
+    <button class="secondary" id="deselectBtn" disabled type="button">
+      ◻️ لغو انتخاب
+    </button>
 
-  <div class="actions">
-    <button class="copy" id="copyBtn">📋 کپی متن</button>
-    <button class="clear" id="clearBtn">🗑 پاک کردن</button>
+    <button class="danger" id="clearBtn" type="button">
+      🗑 پاک کردن
+    </button>
   </div>
 
-  <button class="about-button" id="aboutBtn"
-    type="button" aria-expanded="false">
+  <main class="workspace">
+
+    <section class="card">
+      <h2>🖼️ تصویر و کادرهای متنی</h2>
+
+      <div class="toolbar">
+        <button class="secondary" id="zoomOut" type="button"
+          aria-label="کوچک‌نمایی">−</button>
+
+        <span id="zoomLabel">100%</span>
+
+        <button class="secondary" id="zoomIn" type="button"
+          aria-label="بزرگ‌نمایی">+</button>
+
+        <button class="secondary" id="zoomReset" type="button">
+          ↺ اندازه اصلی
+        </button>
+      </div>
+
+      <div class="image-scroll" id="imageScroll">
+        <div id="imageStage">
+          <img id="mainImage" alt="تصویر برای تشخیص متن">
+          <div id="overlay"></div>
+        </div>
+
+        <div id="imagePlaceholder" class="empty-message">
+          بعد از انتخاب عکس، تصویر اینجا نمایش داده می‌شود.
+        </div>
+      </div>
+
+      <p class="image-help">
+        بعد از تشخیص متن، روی کادر هر خط ضربه بزن تا انتخاب شود.
+        کادرهای سبز نشان‌دهنده قسمت‌های انتخاب‌شده هستند.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>📝 متن‌های شناسایی‌شده</h2>
+
+      <p class="image-help">
+        برای انتخاب یا لغو انتخاب هر خط، روی آن ضربه بزن.
+      </p>
+
+      <div class="selection-summary">
+        <span id="lineCount">تعداد خطوط: ۰</span>
+        <span id="selectedCount">انتخاب‌شده: ۰ خط</span>
+      </div>
+
+      <div id="lineList" class="line-list">
+        <div class="empty-message">
+          هنوز متنی شناسایی نشده است.
+        </div>
+      </div>
+
+      <label class="text-label" for="result">
+        ✏️ متن انتخاب‌شده برای کپی
+      </label>
+
+      <textarea id="result"
+        placeholder="خطوط دلخواه را از فهرست یا روی عکس انتخاب کن..."
+        spellcheck="false"></textarea>
+
+      <p class="editor-note">
+        این کادر قابل ویرایش است. هنگام کپی، دقیقاً متنی که در اینجا
+        می‌بینی کپی می‌شود.
+      </p>
+
+      <div class="button-row">
+        <button class="primary" id="copyBtn" type="button">
+          📋 کپی متن انتخاب‌شده
+        </button>
+
+        <button class="secondary" id="refreshTextBtn" type="button">
+          ↻ بازسازی متن انتخابی
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <button class="secondary full" id="aboutBtn"
+    type="button" aria-expanded="false" style="margin-top:16px">
     👤 درباره من
   </button>
 
@@ -257,19 +676,20 @@ footer {
 
     <p class="about-detail">
       Email:
-      <a class="email-link"
-         href="mailto:masoud0098d@gmail.com">
+      <a class="email-link" href="mailto:masoud0098d@gmail.com">
         masoud0098d@gmail.com
       </a>
     </p>
 
-    <button class="clear" id="closeAbout" type="button">
+    <button class="secondary" id="closeAbout" type="button">
       بستن
     </button>
   </section>
 
   <footer>
-    موتور تشخیص متن Tesseract.js · زبان فارسی و انگلیسی
+    موتور تشخیص متن Tesseract.js · پشتیبانی از فارسی و انگلیسی
+    <br>
+    طراحی و توسعه: Masoud delavar
   </footer>
 
 </div>
@@ -277,195 +697,592 @@ footer {
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 <script>
+'use strict';
+
 const $ = id => document.getElementById(id);
 
 const fileInput = $('fileInput');
 const dropArea = $('dropArea');
-const preview = $('preview');
 const extractBtn = $('extractBtn');
-const result = $('result');
 const statusBox = $('status');
 const progress = $('progress');
+const mainImage = $('mainImage');
+const imageStage = $('imageStage');
+const imageScroll = $('imageScroll');
+const overlay = $('overlay');
+const imagePlaceholder = $('imagePlaceholder');
+const lineList = $('lineList');
+const result = $('result');
 
 let selectedFile = null;
+let previewUrl = null;
 let worker = null;
 let busy = false;
-let previewUrl = null;
+let imageReady = false;
+let zoom = 1;
+let textLines = [];
+let selectedIds = new Set();
+
+/* وضعیت */
 
 function setStatus(message) {
   statusBox.textContent = message;
 }
 
+function updateButtons() {
+  const hasLines = textLines.length > 0;
+
+  $('selectAllBtn').disabled = busy || !hasLines;
+  $('deselectBtn').disabled = busy || selectedIds.size === 0;
+  extractBtn.disabled = busy || !selectedFile || !imageReady;
+  $('removeImageBtn').disabled = busy;
+  $('clearBtn').disabled = busy;
+  fileInput.disabled = busy;
+}
+
+function updateSelectionSummary() {
+  $('lineCount').textContent = 'تعداد خطوط: ' + textLines.length;
+  $('selectedCount').textContent =
+    'انتخاب‌شده: ' + selectedIds.size + ' خط';
+
+  updateButtons();
+}
+
+/* انتخاب عکس */
+
 function selectFile(file) {
-  if (!file) return;
+  if (!file || busy) return;
 
   if (!file.type.startsWith('image/')) {
-    setStatus('لطفاً یک فایل عکس معتبر انتخاب کن.');
+    setStatus('لطفاً یک فایل تصویری معتبر انتخاب کن.');
     return;
   }
-
-  if (busy) return;
-
-  selectedFile = file;
 
   if (previewUrl) {
     URL.revokeObjectURL(previewUrl);
   }
 
+  selectedFile = file;
   previewUrl = URL.createObjectURL(file);
-  preview.src = previewUrl;
-  preview.style.display = 'block';
+  imageReady = false;
+  zoom = 1;
 
-  extractBtn.disabled = false;
-  result.value = '';
-  progress.hidden = true;
-  progress.value = 0;
+  mainImage.onload = () => {
+    imageReady = true;
 
-  setStatus('عکس آماده است. روی استخراج متن بزن.');
+    $('previewSmall').src = previewUrl;
+    $('previewSmall').style.display = 'block';
+    $('fileName').textContent = file.name;
+    $('fileInfo').hidden = false;
+
+    imagePlaceholder.hidden = true;
+    mainImage.hidden = false;
+
+    resetRecognition();
+
+    applyZoom();
+    updateButtons();
+
+    setStatus('عکس آماده است. برای شناسایی خطوط روی دکمه تشخیص متن بزن.');
+  };
+
+  mainImage.onerror = () => {
+    imageReady = false;
+    selectedFile = null;
+    updateButtons();
+    setStatus('باز کردن عکس ناموفق بود. یک فایل تصویری دیگر امتحان کن.');
+  };
+
+  mainImage.src = previewUrl;
+  fileInput.value = '';
+
+  updateButtons();
 }
 
 fileInput.addEventListener('change', () => {
-  selectFile(fileInput.files[0]);
+  if (fileInput.files && fileInput.files[0]) {
+    selectFile(fileInput.files[0]);
+  }
 });
 
-['dragenter', 'dragover'].forEach(name => {
-  dropArea.addEventListener(name, event => {
+['dragenter', 'dragover'].forEach(eventName => {
+  dropArea.addEventListener(eventName, event => {
     event.preventDefault();
-    dropArea.classList.add('drag');
+
+    if (!busy) {
+      dropArea.classList.add('drag');
+    }
   });
 });
 
-['dragleave', 'drop'].forEach(name => {
-  dropArea.addEventListener(name, event => {
+['dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, event => {
     event.preventDefault();
     dropArea.classList.remove('drag');
   });
 });
 
 dropArea.addEventListener('drop', event => {
-  selectFile(event.dataTransfer.files[0]);
+  if (busy) return;
+
+  const files = event.dataTransfer.files;
+
+  if (files && files[0]) {
+    selectFile(files[0]);
+  }
 });
 
-extractBtn.addEventListener('click', async () => {
-  if (!selectedFile || busy) return;
+/* بزرگ‌نمایی */
 
-  busy = true;
-  extractBtn.disabled = true;
-  progress.hidden = false;
-  progress.value = 0;
+function applyZoom() {
+  if (!imageReady) return;
+
+  const width = mainImage.naturalWidth * zoom;
+
+  imageStage.style.width = width + 'px';
+  imageStage.style.maxWidth = 'none';
+
+  if (zoom <= 1) {
+    imageStage.style.width = '100%';
+    imageStage.style.maxWidth = '100%';
+  }
+
+  $('zoomLabel').textContent = Math.round(zoom * 100) + '%';
+
+  requestAnimationFrame(renderBoxes);
+}
+
+$('zoomIn').addEventListener('click', () => {
+  zoom = Math.min(zoom + 0.2, 3);
+  applyZoom();
+});
+
+$('zoomOut').addEventListener('click', () => {
+  zoom = Math.max(zoom - 0.2, 0.4);
+  applyZoom();
+});
+
+$('zoomReset').addEventListener('click', () => {
+  zoom = 1;
+  applyZoom();
+});
+
+/* پاک کردن نتایج قبلی */
+
+function resetRecognition() {
+  textLines = [];
+  selectedIds.clear();
+  overlay.replaceChildren();
+
+  lineList.innerHTML =
+    '<div class="empty-message">هنوز متنی شناسایی نشده است.</div>';
+
   result.value = '';
 
-  try {
-    if (typeof Tesseract === 'undefined') {
-      throw new Error(
-        'کتابخانه OCR بارگذاری نشده است. اتصال اینترنت را بررسی کن.'
-      );
-    }
+  updateSelectionSummary();
+}
 
-    setStatus('در حال آماده‌سازی موتور تشخیص متن...');
+/* راه‌اندازی موتور OCR */
 
-    if (!worker) {
-      worker = await Tesseract.createWorker('fas+eng', 1, {
-        logger: message => {
-          if (message.status) {
-            const percent = Math.round(
-              (message.progress || 0) * 100
-            );
+async function getWorker() {
+  if (worker) return worker;
 
-            progress.value = percent;
+  if (typeof Tesseract === 'undefined') {
+    throw new Error(
+      'کتابخانه OCR بارگذاری نشده است. اتصال اینترنت را بررسی کن.'
+    );
+  }
 
-            setStatus(
-              'وضعیت: ' + message.status +
-              (message.progress != null
-                ? ' — ' + percent + '%'
-                : '')
-            );
-          }
+  setStatus('در حال بارگذاری موتور تشخیص متن فارسی و انگلیسی...');
+
+  worker = await Tesseract.createWorker('fas+eng', 1, {
+    logger: message => {
+      if (message.status) {
+        const percent = Math.round((message.progress || 0) * 100);
+
+        if (message.status === 'recognizing text') {
+          progress.value = percent;
+          setStatus('در حال تشخیص متن... ' + percent + '%');
+        } else {
+          setStatus('آماده‌سازی موتور: ' + message.status);
         }
-      });
+      }
+    }
+  });
+
+  return worker;
+}
+
+/* استخراج خطوط و مختصات */
+
+function getLinesFromResult(data) {
+  const lines = Array.isArray(data.lines) ? data.lines : [];
+
+  return lines
+    .filter(line => {
+      const text = (line.text || '').trim();
+      const box = line.bbox;
+
+      return text &&
+        box &&
+        Number.isFinite(box.x0) &&
+        Number.isFinite(box.y0) &&
+        Number.isFinite(box.x1) &&
+        Number.isFinite(box.y1) &&
+        box.x1 > box.x0 &&
+        box.y1 > box.y0;
+    })
+    .map((line, index) => ({
+      id: index,
+      text: line.text.trim(),
+      bbox: {
+        x0: line.bbox.x0,
+        y0: line.bbox.y0,
+        x1: line.bbox.x1,
+        y1: line.bbox.y1
+      },
+      confidence: Number.isFinite(line.confidence)
+        ? Math.round(line.confidence)
+        : null
+    }));
+}
+
+/* تشخیص متن */
+
+extractBtn.addEventListener('click', async () => {
+  if (!selectedFile || !imageReady || busy) return;
+
+  busy = true;
+  resetRecognition();
+
+  progress.hidden = false;
+  progress.value = 0;
+  updateButtons();
+
+  try {
+    const ocrWorker = await getWorker();
+
+    setStatus('در حال بررسی تصویر و شناسایی متن...');
+
+    const response = await ocrWorker.recognize(selectedFile);
+
+    textLines = getLinesFromResult(response.data);
+
+    if (textLines.length === 0) {
+      const fullText = (response.data.text || '').trim();
+
+      if (fullText) {
+        setStatus(
+          'متن شناسایی شد، اما مختصات خطوط در دسترس نیست. ' +
+          'لطفاً عکس واضح‌تری امتحان کن.'
+        );
+      } else {
+        setStatus(
+          'متنی پیدا نشد. وضوح عکس، نور و اندازه نوشته‌ها را بررسی کن.'
+        );
+      }
+
+      return;
     }
 
-    setStatus('در حال خواندن متن فارسی و انگلیسی...');
+    selectedIds.clear();
 
-    const { data } = await worker.recognize(selectedFile);
+    renderBoxes();
+    renderLineList();
+    updateSelectionSummary();
 
-    result.value = data.text.trim();
+    progress.value = 100;
 
-    if (result.value) {
-      setStatus('استخراج تمام شد! متن را بررسی کن و کپی بگیر.');
-      progress.value = 100;
-    } else {
-      setStatus(
-        'متنی پیدا نشد. عکس واضح‌تر یا با کیفیت بالاتر امتحان کن.'
-      );
-    }
+    setStatus(
+      textLines.length + ' خط شناسایی شد. ' +
+      'حالا روی کادرهای عکس یا خطوط فهرست بزن تا انتخاب شوند.'
+    );
 
   } catch (error) {
     console.error(error);
 
     setStatus(
-      'خطا در استخراج متن. اینترنت را بررسی کن و دوباره امتحان کن. ' +
-      (error.message || '')
+      'خطا در تشخیص متن: ' +
+      (error.message || 'اتصال اینترنت یا بارگذاری موتور OCR را بررسی کن.')
     );
 
   } finally {
     busy = false;
-    extractBtn.disabled = !selectedFile;
+    progress.hidden = false;
+    updateButtons();
   }
 });
 
+/* نمایش کادرهای انتخاب روی عکس */
+
+function renderBoxes() {
+  if (!imageReady || !mainImage.naturalWidth) return;
+
+  overlay.replaceChildren();
+
+  const naturalWidth = mainImage.naturalWidth;
+  const naturalHeight = mainImage.naturalHeight;
+
+  textLines.forEach(line => {
+    const box = document.createElement('button');
+
+    box.type = 'button';
+    box.className = 'text-box';
+
+    if (selectedIds.has(line.id)) {
+      box.classList.add('selected');
+    }
+
+    const left = line.bbox.x0 / naturalWidth * 100;
+    const top = line.bbox.y0 / naturalHeight * 100;
+    const width = (line.bbox.x1 - line.bbox.x0) / naturalWidth * 100;
+    const height = (line.bbox.y1 - line.bbox.y0) / naturalHeight * 100;
+
+    box.style.left = left + '%';
+    box.style.top = top + '%';
+    box.style.width = width + '%';
+    box.style.height = height + '%';
+
+    box.setAttribute(
+      'aria-label',
+      'خط ' + (line.id + 1) + ': ' + line.text
+    );
+
+    box.setAttribute(
+      'aria-pressed',
+      String(selectedIds.has(line.id))
+    );
+
+    box.title = line.text;
+
+    const number = document.createElement('span');
+    number.className = 'box-number';
+    number.textContent = String(line.id + 1);
+    number.setAttribute('aria-hidden', 'true');
+
+    box.appendChild(number);
+
+    box.addEventListener('click', event => {
+      event.stopPropagation();
+      toggleLine(line.id);
+    });
+
+    overlay.appendChild(box);
+  });
+}
+
+/* نمایش فهرست خطوط */
+
+function renderLineList() {
+  lineList.replaceChildren();
+
+  if (!textLines.length) {
+    lineList.innerHTML =
+      '<div class="empty-message">خطی برای نمایش وجود ندارد.</div>';
+    return;
+  }
+
+  textLines.forEach(line => {
+    const item = document.createElement('label');
+    item.className = 'line-item';
+
+    if (selectedIds.has(line.id)) {
+      item.classList.add('selected');
+    }
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = selectedIds.has(line.id);
+    checkbox.setAttribute(
+      'aria-label',
+      'انتخاب خط ' + (line.id + 1)
+    );
+
+    checkbox.addEventListener('change', () => {
+      setLineSelected(line.id, checkbox.checked);
+    });
+
+    const number = document.createElement('span');
+    number.className = 'line-number';
+    number.textContent = String(line.id + 1);
+
+    const textContainer = document.createElement('span');
+
+    const text = document.createElement('span');
+    text.className = 'line-text';
+    text.textContent = line.text;
+
+    textContainer.appendChild(text);
+
+    if (line.confidence !== null) {
+      const confidence = document.createElement('span');
+      confidence.className = 'line-confidence';
+      confidence.textContent = 'اطمینان موتور: ' + line.confidence + '%';
+      textContainer.appendChild(confidence);
+    }
+
+    item.appendChild(checkbox);
+    item.appendChild(number);
+    item.appendChild(textContainer);
+
+    item.addEventListener('click', event => {
+      if (event.target === checkbox) return;
+
+      event.preventDefault();
+      toggleLine(line.id);
+    });
+
+    lineList.appendChild(item);
+  });
+}
+
+/* انتخاب و لغو انتخاب */
+
+function toggleLine(id) {
+  setLineSelected(id, !selectedIds.has(id));
+}
+
+function setLineSelected(id, isSelected) {
+  if (isSelected) {
+    selectedIds.add(id);
+  } else {
+    selectedIds.delete(id);
+  }
+
+  renderBoxes();
+  renderLineList();
+  updateSelectionSummary();
+  syncSelectedText();
+}
+
+function selectAllLines() {
+  textLines.forEach(line => selectedIds.add(line.id));
+
+  renderBoxes();
+  renderLineList();
+  updateSelectionSummary();
+  syncSelectedText();
+
+  setStatus('تمام ' + selectedIds.size + ' خط انتخاب شدند.');
+}
+
+function deselectAllLines() {
+  selectedIds.clear();
+
+  renderBoxes();
+  renderLineList();
+  updateSelectionSummary();
+  syncSelectedText();
+
+  setStatus('انتخاب همه خطوط لغو شد.');
+}
+
+$('selectAllBtn').addEventListener('click', selectAllLines);
+$('deselectBtn').addEventListener('click', deselectAllLines);
+
+/* ساخت متن خطوط انتخاب‌شده */
+
+function syncSelectedText() {
+  const chosen = textLines
+    .filter(line => selectedIds.has(line.id))
+    .sort((a, b) => a.id - b.id)
+    .map(line => line.text);
+
+  result.value = chosen.join('\n');
+}
+
+$('refreshTextBtn').addEventListener('click', () => {
+  syncSelectedText();
+
+  setStatus('متن کادر از روی خطوط انتخاب‌شده بازسازی شد.');
+});
+
+/* کپی متن */
+
 $('copyBtn').addEventListener('click', async () => {
-  if (!result.value) {
-    setStatus('هنوز متنی برای کپی وجود ندارد.');
+  const text = result.value;
+
+  if (!text.trim()) {
+    setStatus('ابتدا حداقل یک خط انتخاب کن یا متن دلخواهت را وارد کن.');
     return;
   }
 
   try {
     if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(result.value);
+      await navigator.clipboard.writeText(text);
     } else {
       result.focus();
       result.select();
 
-      if (!document.execCommand('copy')) {
+      const success = document.execCommand('copy');
+
+      if (!success) {
         throw new Error('Copy failed');
       }
     }
 
-    setStatus('متن با موفقیت کپی شد! ✅');
+    setStatus('متن داخل کادر با موفقیت کپی شد! ✅');
 
   } catch (error) {
     result.focus();
     result.select();
-    setStatus('متن انتخاب شد؛ اگر کپی نشد، دستی کپی کن.');
+
+    setStatus(
+      'کپی خودکار انجام نشد. متن انتخاب شده؛ آن را دستی کپی کن.'
+    );
   }
 });
 
-$('clearBtn').addEventListener('click', () => {
+/* پاک کردن عکس و نتایج */
+
+function clearImage() {
   if (busy) return;
 
   selectedFile = null;
+  imageReady = false;
   fileInput.value = '';
 
   if (previewUrl) {
     URL.revokeObjectURL(previewUrl);
+    previewUrl = null;
   }
 
-  previewUrl = null;
-  preview.removeAttribute('src');
-  preview.style.display = 'none';
+  mainImage.onload = null;
+  mainImage.onerror = null;
+  mainImage.removeAttribute('src');
+  mainImage.hidden = true;
 
-  result.value = '';
-  extractBtn.disabled = true;
+  $('previewSmall').removeAttribute('src');
+  $('previewSmall').style.display = 'none';
+  $('fileName').textContent = '';
+  $('fileInfo').hidden = true;
+
+  imageStage.style.width = '100%';
+  imageStage.style.maxWidth = '100%';
+
+  overlay.replaceChildren();
+  imagePlaceholder.hidden = false;
+
+  zoom = 1;
+  $('zoomLabel').textContent = '100%';
+
+  resetRecognition();
+
   progress.value = 0;
   progress.hidden = true;
 
   setStatus('پاک شد. یک عکس جدید انتخاب کن.');
-});
+  updateButtons();
+}
+
+$('clearBtn').addEventListener('click', clearImage);
+
+$('removeImageBtn').addEventListener('click', clearImage);
+
+/* بخش درباره من */
 
 $('aboutBtn').addEventListener('click', () => {
   const panel = $('aboutPanel');
-
   panel.hidden = !panel.hidden;
 
   $('aboutBtn').setAttribute(
@@ -478,8 +1295,13 @@ $('closeAbout').addEventListener('click', () => {
   $('aboutPanel').hidden = true;
   $('aboutBtn').setAttribute('aria-expanded', 'false');
 });
+
+/* وضعیت اولیه */
+
+mainImage.hidden = true;
+imagePlaceholder.hidden = false;
+updateButtons();
 </script>
 
 </body>
 </html>
-
